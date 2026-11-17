@@ -1,0 +1,4 @@
+# Personal usage readings: never upload.
+plan-readings.json
+__pycache__/
+*.log
