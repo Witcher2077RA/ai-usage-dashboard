@@ -516,6 +516,8 @@ def build_data():
 
 # --------------------------------------------------------------------- Server
 
+DATA_SOURCE = build_data  # swapped for demo_data by --demo
+
 class Handler(BaseHTTPRequestHandler):
     def _send(self, status, body, content_type):
         self.send_response(status)
@@ -536,7 +538,7 @@ class Handler(BaseHTTPRequestHandler):
             self._send(200, body, "text/html; charset=utf-8")
         elif route == "/api/data":
             try:
-                body = json.dumps(build_data()).encode("utf-8")
+                body = json.dumps(DATA_SOURCE()).encode("utf-8")
             except Exception as exc:  # surface parse problems in the UI, keep serving
                 body = json.dumps({"error": f"{type(exc).__name__}: {exc}"}).encode("utf-8")
                 self._send(500, body, "application/json")
@@ -553,7 +555,13 @@ def main():
     parser = argparse.ArgumentParser(description="Local AI usage dashboard")
     parser.add_argument("--port", type=int, default=8377)
     parser.add_argument("--open", action="store_true", help="open the dashboard in a browser")
+    parser.add_argument("--demo", action="store_true", help="show made-up sample data instead of your logs")
     args = parser.parse_args()
+    global DATA_SOURCE
+    if args.demo:
+        from demo_data import demo_data
+        DATA_SOURCE = demo_data
+        print("Demo mode: showing made-up sample data, not your logs.", flush=True)
     server = ThreadingHTTPServer(("127.0.0.1", args.port), Handler)
     url = f"http://127.0.0.1:{args.port}/"
     print(f"AI usage dashboard running at {url}  (Ctrl+C to stop)", flush=True)

@@ -4,6 +4,9 @@ A local, live dashboard of how much AI you're using on your own PC. It reads the
 
 Single Python file plus one HTML page. **Standard library only**: no installs.
 
+![The dashboard, showing made-up demo data](docs/screenshot.png)
+*Screenshot from demo mode (`--demo`), so the sessions and numbers are invented.*
+
 ## What it shows
 - **Accounts**: Claude plan limits (5-hour and weekly windows, per-model caps), tokens today, a bar per day, and how fresh each reading is. Ollama gets a traffic-only row.
 - **Pace**: weekly usage against how much of the week has passed, plus the burn rate over the last hour.
@@ -25,6 +28,11 @@ Dollar values are estimates at published API list prices (the `PRICES` table at 
 python server.py --open
 ```
 Or double-click `Start dashboard.cmd` on Windows. It serves http://127.0.0.1:8377/ and refreshes every 10 seconds. Use `--port` to change the port.
+
+No AI logs on your machine? Try it with made-up sample data:
+```bash
+python server.py --demo --open
+```
 
 To record plan-limit readings by hand, copy `plan-readings.example.json` to `plan-readings.json` and add entries. The file is git-ignored.
 
